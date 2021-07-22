@@ -1,0 +1,36 @@
+{
+  "name": "jest-sentry-environment",
+  "version": "1.0.0",
+  "description": "Sentry instrumentation for jest",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/billyvg/jest-sentry-environment.git"
+  },
+  "keywords": [
+    "sentry",
+    "jest",
+    "test",
+    "testing"
+  ],
+  "author": "Billy Vong <github@mmo.me>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/billyvg/jest-sentry-environment/issues"
+  },
+  "homepage": "https://github.com/billyvg/jest-sentry-environment#readme",
+  "devDependencies": {
+    "prettier": "^2.3.2"
+  },
+  "dependencies": {
+    "@sentry/node": "^6.10.0",
+    "@sentry/tracing": "^6.10.0"
+  },
+  "peerDependencies": {
+    "jest-environment-jsdom": "^27.0.6",
+    "jest-environment-node": "^27.0.6"
+  }
+}
