@@ -2,7 +2,7 @@
 
 Adds Sentry performance monitoring to your jest test suites to find your slowest tests.
 
-[[/docs/example.png|Sentry Performance example]]
+![Sentry Example](/docs/example.png)
 
 
 ## Installation
