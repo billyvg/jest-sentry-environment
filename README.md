@@ -7,6 +7,12 @@ Adds Sentry performance monitoring to your jest test suites to find your slowest
 
 ## Installation
 
+You will first need to install the Sentry SDK in your project.
+
+```shell
+npm install @sentry/node @sentry/tracing
+```
+
 In your jest configuration file, e.g. `jest.config.js` you'll need to add the following:
 
 ```javascript
