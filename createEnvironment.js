@@ -18,24 +18,20 @@ function createEnvironment({ baseEnvironment } = {}) {
         return;
       }
 
-      try {
-        const Sentry = require("@sentry/node");
-        require("@sentry/tracing");
+      const Sentry = require("@sentry/node");
+      require("@sentry/tracing");
 
-        const { init } = config.testEnvironmentOptions.sentryConfig;
+      const { init } = config.testEnvironmentOptions.sentryConfig;
 
-        this.Sentry = Sentry;
-        this.Sentry.init(init);
-        this.options = config.testEnvironmentOptions.sentryConfig;
-        this.testPath = context.testPath.replace(process.cwd(), "");
+      this.Sentry = Sentry;
+      this.Sentry.init(init);
+      this.options = config.testEnvironmentOptions.sentryConfig;
+      this.testPath = context.testPath.replace(process.cwd(), "");
 
-        this.runDescribe = new Map();
-        this.testContainers = new Map();
-        this.tests = new Map();
-        this.hooks = new Map();
-      } catch (err) {
-        console.error(err);
-      }
+      this.runDescribe = new Map();
+      this.testContainers = new Map();
+      this.tests = new Map();
+      this.hooks = new Map();
     }
 
     async setup() {
@@ -64,7 +60,7 @@ function createEnvironment({ baseEnvironment } = {}) {
     }
 
     async teardown() {
-      if (!this.Sentry) {
+      if (!this.Sentry || !this.transaction) {
         await super.teardown();
         return;
       }
@@ -87,6 +83,11 @@ function createEnvironment({ baseEnvironment } = {}) {
     }
 
     getVmContext() {
+      if (this.transaction && !this.getVmContextSpan) {
+        this.getVmContextSpan = this.transaction.startChild({
+          op: "getVmContext",
+        });
+      }
       return super.getVmContext();
     }
 
@@ -108,6 +109,11 @@ function createEnvironment({ baseEnvironment } = {}) {
       switch (name) {
         case "run_describe_start":
         case "run_describe_finish":
+          if (this.getVmContextSpan) {
+            this.getVmContextSpan.finish();
+            this.getVmContextSpan = null;
+          }
+
           return {
             op: "describe",
             obj: event.describeBlock,
