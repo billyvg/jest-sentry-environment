@@ -28,7 +28,6 @@
   "peerDependencies": {
     "@sentry/node": ">=6",
     "@sentry/tracing": ">=6",
-    "jest-environment-jsdom": ">=27",
-    "jest-environment-node": ">=27"
+    "jest": ">=27"
   }
 }
