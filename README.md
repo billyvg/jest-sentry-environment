@@ -7,10 +7,10 @@ Adds Sentry performance monitoring to your jest test suites to find your slowest
 
 ## Installation
 
-First you'll want to add the `jest-sentry-environment` package to your application.
+First, you will need to add the `jest-sentry-environment` package to your application, as well as the Sentry SDKs.
 
 ```bash
-npm install jest-sentry-environment
+npm install @sentry/node @sentry/tracing jest-sentry-environment
 ```
 
 Then, in your jest configuration file, e.g. `jest.config.js` you will need to specify the path to the environment as well as some options. 
