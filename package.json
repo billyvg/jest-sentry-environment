@@ -26,8 +26,8 @@
     "prettier": "^2.3.2"
   },
   "peerDependencies": {
-    "@sentry/node": "^6.10.0",
-    "@sentry/tracing": "^6.10.0",
+    "@sentry/node": ">=6",
+    "@sentry/tracing": ">=6",
     "jest-environment-jsdom": "^27.0.6",
     "jest-environment-node": "^27.0.6"
   }
