@@ -48,6 +48,7 @@ function createEnvironment({ baseEnvironment } = {}) {
         name: this.testPath,
         tags: transactionOptions.tags,
       });
+      this.global.transaction = this.transaction;
 
       this.Sentry.configureScope((scope) => scope.setSpan(this.transaction));
 
