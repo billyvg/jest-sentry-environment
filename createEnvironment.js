@@ -13,7 +13,11 @@ function createEnvironment({ baseEnvironment } = {}) {
 
       if (
         !config.testEnvironmentOptions ||
-        !config.testEnvironmentOptions.sentryConfig
+        !config.testEnvironmentOptions.sentryConfig ||
+        // Do not include in watch mode... unfortunately, I don't think there's
+        // a better watch to detect when jest is in watch mode
+        process.argv.includes('--watch') ||
+        process.argv.includes('--watchAll')
       ) {
         return;
       }
