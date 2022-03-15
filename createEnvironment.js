@@ -137,7 +137,7 @@ function createEnvironment({ baseEnvironment } = {}) {
             parentStore: this.runDescribe,
             beforeFinish: (span) => {
               span.setStatus(
-                !event.test.errors.length ? "ok" : "unknown_error"
+                !event.test.errors.length ? "ok" : "internal_error"
               );
               return span;
             },
@@ -154,7 +154,7 @@ function createEnvironment({ baseEnvironment } = {}) {
             parentStore: this.testContainers,
             beforeFinish: (span) => {
               span.setStatus(
-                !event.test.errors.length ? "ok" : "unknown_error"
+                !event.test.errors.length ? "ok" : "internal_error"
               );
               return span;
             },
@@ -257,6 +257,7 @@ function createEnvironment({ baseEnvironment } = {}) {
               op: "jest test",
               name: spanProps.description,
               description: null,
+              tags: this.options.transactionOptions?.tags,
             })
           );
         }
