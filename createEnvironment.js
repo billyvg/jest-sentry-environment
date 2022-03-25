@@ -225,6 +225,12 @@ function createEnvironment({ baseEnvironment } = {}) {
 
       const testName = this.getName(obj);
 
+      if (name.includes("failure")) {
+        if (event.error) {
+          this.Sentry.captureException(event.error);
+        }
+      }
+
       if (name.includes("start")) {
         // Make this an option maybe
         if (!testName) {
