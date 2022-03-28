@@ -225,12 +225,6 @@ function createEnvironment({ baseEnvironment } = {}) {
 
       const testName = this.getName(obj);
 
-      if (name.includes("failure")) {
-        if (event.error) {
-          this.Sentry.captureException(event.error);
-        }
-      }
-
       if (name.includes("start")) {
         // Make this an option maybe
         if (!testName) {
@@ -275,6 +269,16 @@ function createEnvironment({ baseEnvironment } = {}) {
 
       if (dataStore.has(testName)) {
         const spans = dataStore.get(testName);
+
+        if (name.includes("failure")) {
+          if (event.error) {
+            const testSpan = spans.find(span => span.transaction.op === "jest test")
+            this.Sentry.configureScope(scope => {
+              scope.setSpan(testSpan.transaction ?? spans[0].transaction);
+            });
+            const exception = this.Sentry.captureException(event.error);
+          }
+        }
 
         spans.forEach((span) => {
           if (beforeFinish) {
