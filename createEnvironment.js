@@ -270,6 +270,16 @@ function createEnvironment({ baseEnvironment } = {}) {
       if (dataStore.has(testName)) {
         const spans = dataStore.get(testName);
 
+        if (name.includes("failure")) {
+          if (event.error) {
+            const testSpan = spans.find(span => span.transaction.op === "jest test")
+            this.Sentry.configureScope(scope => {
+              scope.setSpan(testSpan.transaction ?? spans[0].transaction);
+            });
+            const exception = this.Sentry.captureException(event.error);
+          }
+        }
+
         spans.forEach((span) => {
           if (beforeFinish) {
             span = beforeFinish(span);
