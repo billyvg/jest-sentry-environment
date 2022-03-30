@@ -53,6 +53,7 @@ function createEnvironment({ baseEnvironment } = {}) {
         tags: transactionOptions.tags,
       });
       this.global.transaction = this.transaction;
+      this.global.Sentry = this.Sentry;
 
       this.Sentry.configureScope((scope) => scope.setSpan(this.transaction));
 
@@ -251,15 +252,20 @@ function createEnvironment({ baseEnvironment } = {}) {
 
         // If we are starting a test, let's also make it a transaction so we can see our slowest tests
         if (spanProps.op === "test") {
-          spans.push(
-            this.Sentry.startTransaction({
-              ...spanProps,
-              op: "jest test",
-              name: spanProps.description,
-              description: null,
-              tags: this.options.transactionOptions?.tags,
-            })
-          );
+          const testTransaction = this.Sentry.startTransaction({
+            ...spanProps,
+            op: "jest test",
+            name: spanProps.description,
+            description: null,
+            // attach the trace id and span id of parent transaction so they're part of the same trace
+            parentSpanId: span[0].spanId,
+            traceId: span[0].transaction.traceId,
+            tags: this.options.transactionOptions?.tags,
+          })
+          spans.push(testTransaction);
+
+          // ensure that the test transaction is on the scope while it's happening
+          this.Sentry.configureScope((scope) => scope.setSpan(testTransaction));
         }
 
         dataStore.set(testName, spans);
@@ -272,11 +278,7 @@ function createEnvironment({ baseEnvironment } = {}) {
 
         if (name.includes("failure")) {
           if (event.error) {
-            const testSpan = spans.find(span => span.transaction.op === "jest test")
-            this.Sentry.configureScope(scope => {
-              scope.setSpan(testSpan.transaction ?? spans[0].transaction);
-            });
-            const exception = this.Sentry.captureException(event.error);
+            this.Sentry.captureException(event.error);
           }
         }
 
@@ -289,6 +291,12 @@ function createEnvironment({ baseEnvironment } = {}) {
           }
 
           span.finish();
+
+          // if this is finishing a jest test span, then put the test suite transaction
+          // back on the scope
+          if (span.op === "jest test") {
+            this.Sentry.configureScope((scope) => scope.setSpan(this.transaction));
+          }
         });
       }
     }
