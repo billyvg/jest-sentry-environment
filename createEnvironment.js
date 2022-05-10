@@ -241,8 +241,7 @@ function createEnvironment({ baseEnvironment } = {}) {
               ? parentStore
                   .get(parentName)
                   .map((s) =>
-                    s.startChild(spanProps
-                  )
+                    s.startChild(spanProps))
               : [parentStore.get(parentName).startChild(spanProps)]
             : [this.transaction.startChild(spanProps)];
 
