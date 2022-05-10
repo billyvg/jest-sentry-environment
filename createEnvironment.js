@@ -178,9 +178,9 @@ function createEnvironment({ baseEnvironment } = {}) {
             beforeFinish: (span) => {
               const parent = this.testContainers.get(this.getName(event.test));
               if (parent && !Array.isArray(parent)) {
-                return parent.child(span);
+                return parent.startChild(span);
               } else if (Array.isArray(parent)) {
-                return parent.find(isNotTransaction).child(span);
+                return parent.find(isNotTransaction).startChild(span);
               }
               return span;
             },
@@ -241,11 +241,9 @@ function createEnvironment({ baseEnvironment } = {}) {
               ? parentStore
                   .get(parentName)
                   .map((s) =>
-                    typeof s.child === "function"
-                      ? s.child(spanProps)
-                      : s.startChild(spanProps)
+                    s.startChild(spanProps
                   )
-              : [parentStore.get(parentName).child(spanProps)]
+              : [parentStore.get(parentName).startChild(spanProps)]
             : [this.transaction.startChild(spanProps)];
 
         spans.push(...span);
