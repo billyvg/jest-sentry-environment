@@ -11,9 +11,10 @@ function createEnvironment({ baseEnvironment } = {}) {
 
       const [config, context] = args;
 
+      this.options = config.projectConfig.testEnvironmentOptions?.sentryConfig
+
       if (
-        !config.testEnvironmentOptions ||
-        !config.testEnvironmentOptions.sentryConfig ||
+        !this.options ||
         // Do not include in watch mode... unfortunately, I don't think there's
         // a better watch to detect when jest is in watch mode
         process.argv.includes('--watch') ||
@@ -25,11 +26,10 @@ function createEnvironment({ baseEnvironment } = {}) {
       const Sentry = require("@sentry/node");
       require("@sentry/tracing");
 
-      const { init } = config.testEnvironmentOptions.sentryConfig;
+      const { init } = this.options;
 
       this.Sentry = Sentry;
       this.Sentry.init(init);
-      this.options = config.testEnvironmentOptions.sentryConfig;
       this.testPath = context.testPath.replace(process.cwd(), "");
 
       this.runDescribe = new Map();
