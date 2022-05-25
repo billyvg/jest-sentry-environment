@@ -1,6 +1,6 @@
 {
   "name": "jest-sentry-environment",
-  "version": "1.7.1",
+  "version": "2.0.0",
   "description": "Sentry instrumentation for jest",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,6 @@
   "peerDependencies": {
     "@sentry/node": ">=6",
     "@sentry/tracing": ">=6",
-    "jest": ">=27"
+    "jest": ">=28"
   }
 }
