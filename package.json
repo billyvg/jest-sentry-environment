@@ -28,6 +28,6 @@
   "peerDependencies": {
     "@sentry/node": ">=6",
     "@sentry/tracing": ">=6",
-    "jest": ">=27"
+    "jest": ">=28"
   }
 }
