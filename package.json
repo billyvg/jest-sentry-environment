@@ -1,8 +1,7 @@
 {
   "name": "jest-sentry-environment",
   "version": "3.0.0",
-  "description": "Sentry instrumentation for jest",
-  "main": "index.js",
+  "description": "Automatic performance and profiling instrumentation for your jest tests.",
   "scripts": {
     "test": "npm test"
   },
@@ -10,11 +9,22 @@
     "type": "git",
     "url": "git+https://github.com/billyvg/jest-sentry-environment.git"
   },
+  "files": [
+    "package.json",
+    "README.md",
+    "LICENSE",
+    "node.js",
+    "jsdom.js",
+    "createEnvironment.js"
+  ],
   "keywords": [
     "sentry",
     "jest",
     "test",
-    "testing"
+    "testing",
+    "performance",
+    "profiling",
+    "tracing"
   ],
   "author": "Billy Vong <github@mmo.me>",
   "license": "Apache-2.0",

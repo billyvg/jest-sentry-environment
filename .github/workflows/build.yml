@@ -1,0 +1,36 @@
+
+
+name: Upload build artifacts
+on:
+  push:
+    branches:
+      - main
+      - release/**
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: If the commit you want to test isn't the head of a branch, provide its SHA here
+        required: false
+jobs:
+  artifacts:
+    name: Upload Artifacts
+    runs-on: ubuntu-latest
+    # Build artifacts are only needed for releasing workflow.
+    if: startsWith(github.ref, 'refs/heads/release/')
+    steps:
+      - name: Check out current commit
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.HEAD_COMMIT }}
+      - uses: actions/setup-node@v3
+      - name: Install dependencies
+        run: npm install
+      - name: pack
+        run: npm pack
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.sha }}
+          path: |
+            ${{ github.workspace }}/*.tgz
