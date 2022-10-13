@@ -1,3 +1,8 @@
+const Sentry = require("@sentry/node");
+require("@sentry/tracing");
+
+let DID_INIT_SENTRY = false;
+
 function isNotTransaction(span) {
   return span.op !== "jest test";
 }
@@ -23,13 +28,14 @@ function createEnvironment({ baseEnvironment } = {}) {
         return;
       }
 
-      const Sentry = require("@sentry/node");
-      require("@sentry/tracing");
-
       const { init } = this.options;
 
       this.Sentry = Sentry;
-      this.Sentry.init(init);
+      if(!DID_INIT_SENTRY) {
+        this.Sentry.init(init);
+        DID_INIT_SENTRY = true
+      }
+
       this.testPath = context.testPath.replace(process.cwd(), "");
 
       this.runDescribe = new Map();
