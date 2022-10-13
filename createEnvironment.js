@@ -1,5 +1,6 @@
 const Sentry = require("@sentry/node");
 require("@sentry/tracing");
+const {ProfilingIntegration} = require("@sentry/profiling-node");
 
 let DID_INIT_SENTRY = false;
 
@@ -32,6 +33,14 @@ function createEnvironment({ baseEnvironment } = {}) {
 
       this.Sentry = Sentry;
       if(!DID_INIT_SENTRY) {
+        // Ensure integration is an array as init is a user input
+        if(!Array.isArray(init.integrations)) {
+          init.integrations = [];
+        }
+
+        // Add profiling integration
+        init.integrations.push(new ProfilingIntegration());
+
         this.Sentry.init(init);
         DID_INIT_SENTRY = true
       }
